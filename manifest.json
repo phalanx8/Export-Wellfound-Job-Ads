@@ -1,13 +1,12 @@
 {
+  "name": "Export Job Ads",
+  "action": {},
   "manifest_version": 3,
-  "name": "Hello World Logger",
-  "version": "1.0",
-  "permissions": ["activeTab", "storage", "scripting"],
+  "version": "0.1",
+  "description": "Export Job Ads of wellfound jobs",
+  "permissions": ["activeTab", "scripting", "downloads"],
   "background": {
     "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html"
   }
 }
 

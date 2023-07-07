@@ -1,15 +1,14 @@
-const wellfound = "https://www.wellfound.com/jobs/";
-chrome.action.onClicked.addListener(async (tab) => {
-    chrome.action.onClicked.addListener((tab) => {
-        chrome.scripting.executeScript({
-            target: {tabId: tab.id},
-            files: ['content.js']
-        });
+chrome.action.onClicked.addListener((tab) => {
+    chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        function: generateCSV,
     });
 });
 
-
 function generateCSV() {
+    if (!window.location.href.includes("wellfound.com/jobs")) {
+        return;
+    }
     // Return the CSV data as a string
     const companyHeaderSelector = ".styles_headerContainer__GfbYF"
     const companySelector = "h2.styles_name__zvQcy"
@@ -52,17 +51,20 @@ function generateCSV() {
 
         return csvContent;
     };
-    return makeCSV(
-        makeExport("#main > div.styles_component__VRc0I.styles_white__Nexe6 > div.styles_frame__9S86c > div > div > div.flex.flex-col.relative.w-full > div:nth-child(4)"));
-}
-
-function downloadCSV(csvData) {
+    const csvData = makeCSV(
+        makeExport("#main > div.styles_component__VRc0I.styles_white__Nexe6 > div.styles_frame__9S86c > div > div > div.flex.flex-col.relative.w-full > div"));
     const blob = new Blob([csvData], {type: 'text/csv'});
     const url = URL.createObjectURL(blob);
-    chrome.downloads.download({
-        url: url,
-        filename: 'data.csv'
-    });
-}
+    const a = document.createElement('a')
 
+    // Passing the blob downloading url 
+    a.setAttribute('href', url)
+
+    // Setting the anchor tag attribute for downloading
+    // and passing the download file name
+    a.setAttribute('download', 'download.csv');
+
+    // Performing a download with click
+    a.click()
+}
 
